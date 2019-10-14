@@ -18,9 +18,7 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private UIManager _canvas;
     [SerializeField]
-    private bool _isTripleShotActive = false;
-    private bool _isSpeedBoostActive = false;
-    private bool _isShieldActive = false;
+    private bool _isTripleShotActive = false, _isSpeedBoostActive = false, _isShieldActive = false;
     [SerializeField]
     private GameObject _tripleShotPrefab;
     [SerializeField]
@@ -39,6 +37,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _shipExplosion;
     private SpriteRenderer _spriteRenderer;
+    [SerializeField]
+    private float _thursterPower = 2.5f;
+    private float _boost = 1;
 
 
     // Start is called before the first frame update
@@ -68,7 +69,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
-        if ((Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Fire")) && Time.time > _canFire)
+        if ((Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Fire1")) && Time.time > _canFire)
         {
             FireLaser();
         }
@@ -77,21 +78,22 @@ public class Player : MonoBehaviour
 
     void CalculateMovement()
     {
+        if (Input.GetKey(KeyCode.LeftShift)) //On LFT Shift hold, increase Boost to match Thruster Power.
+        {
+            _boost = _thursterPower;
+        }
+        else { _boost = 1; } //on release, return Boost to 1.
         float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");
         float verticalInput = CrossPlatformInputManager.GetAxis("Vertical");
-        //float mouseHorizontalInput = Input.GetAxis("Mouse X");
-        //float mouseVerticalInput = Input.GetAxis("Mouse Y");
         if (_isSpeedBoostActive == false)
         {
-            transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
-            transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
-            //transform.Translate(new Vector3(mouseHorizontalInput, mouseVerticalInput, 0) * _speed * Time.deltaTime);
+            transform.Translate(Vector3.right * horizontalInput * _speed * _boost * Time.deltaTime);
+            transform.Translate(Vector3.up * verticalInput * _speed * _boost * Time.deltaTime);
         }
         else if (_isSpeedBoostActive == true)
         {
-            transform.Translate(Vector3.right * horizontalInput * (_speed * _speedMultipler) * Time.deltaTime);
-            transform.Translate(Vector3.up * verticalInput * (_speed * _speedMultipler) * Time.deltaTime);
-            //transform.Translate(new Vector3(mouseHorizontalInput, mouseVerticalInput, 0) * (_speed * _speedMultipler) * Time.deltaTime);
+            transform.Translate(Vector3.right * horizontalInput * (_speed * _speedMultipler) * _boost * Time.deltaTime);
+            transform.Translate(Vector3.up * verticalInput * (_speed * _speedMultipler) * _boost * Time.deltaTime);
         }
         if (transform.position.y >= 0)
         {
@@ -101,8 +103,6 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, -4, 0);
         }
-        // Replacement for If/Else/If for y
-        // transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -4, 0), 0);
 
         if (transform.position.x > 11)
         {

@@ -925,6 +925,8 @@ MonoBehaviour:
   _fireRate: 0.15
   _lives: 3
   _isTripleShotActive: 0
+  _isSpeedBoostActive: 0
+  _isShieldActive: 0
   _tripleShotPrefab: {fileID: 8830981253902980458, guid: 63ac6239caa536d46ae256e6089ae79d,
     type: 3}
   _playerShield: {fileID: 2085496322}
@@ -936,6 +938,7 @@ MonoBehaviour:
   _explosionSound: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
   _shipExplosion: {fileID: 1993709788422488563, guid: faa0bbf624d079c4ebd9c66a099c6034,
     type: 3}
+  _thursterPower: 0
 --- !u!212 &493848933
 SpriteRenderer:
   m_ObjectHideFlags: 0
