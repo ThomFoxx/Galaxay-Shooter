@@ -23,6 +23,10 @@ public class Player : MonoBehaviour
     private GameObject _tripleShotPrefab;
     [SerializeField]
     private GameObject _playerShield;
+    [SerializeField]
+    private Transform _shieldTransform;
+    [SerializeField]
+    private int _shieldStrength = 0;
     private int _score;
     [SerializeField]
     private GameObject[] _engines; //0 = Right 1 = Left
@@ -137,8 +141,21 @@ public class Player : MonoBehaviour
     {
         if (_isShieldActive == true)
         {
-            _isShieldActive = false;
-            _playerShield.SetActive(false);
+            float ShieldScaleX = _shieldTransform.localScale.x;
+            float ShieldScaleY = _shieldTransform.localScale.y;
+            if (_shieldStrength > 1)
+            {
+                _shieldStrength -= 1;
+                ShieldScaleX -= .5f;
+                ShieldScaleY -= .5f;
+                _shieldTransform.localScale = new Vector3(ShieldScaleX, ShieldScaleY, 2f);
+            }
+            else if (_shieldStrength == 1)
+            {
+                _shieldStrength = 0;
+                _isShieldActive = false;
+                _playerShield.SetActive(false);
+            }
             return;
         }
 
@@ -182,6 +199,8 @@ public class Player : MonoBehaviour
 
     public void ActivateShields()
     {
+        _shieldTransform.localScale = new Vector3(2, 2, 2);
+        _shieldStrength = 3;
         _isShieldActive = true;
         _playerShield.SetActive(true);
     }
