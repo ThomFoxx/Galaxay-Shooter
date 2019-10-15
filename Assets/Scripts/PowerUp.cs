@@ -42,15 +42,12 @@ public class PowerUp : MonoBehaviour
                     case 2:
                         player.ActivateShields();
                         break;
-<<<<<<< HEAD
                     case 3:
                         player.RechargeAmmo();
                         break;
                     case 4:
                         player.Repair();
                         break;
-=======
->>>>>>> 3bc4798f63ce2e0a425d738e8a19b498bfc72ce4
                     default:
                         Debug.Log("Non standard PowerUp Value.");
                         break;

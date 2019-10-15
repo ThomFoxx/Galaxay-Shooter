@@ -11,20 +11,14 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
-<<<<<<< HEAD
     private GameObject _misfirePrefab;
     [SerializeField]
-=======
->>>>>>> 3bc4798f63ce2e0a425d738e8a19b498bfc72ce4
     private float _fireRate = 0.15f;
     private float _canFire = -1f;
     [SerializeField]
     private int _lives = 3;
-<<<<<<< HEAD
     [SerializeField]
     private int _ammo = 50;
-=======
->>>>>>> 3bc4798f63ce2e0a425d738e8a19b498bfc72ce4
     private SpawnManager _spawnManager;
     private UIManager _canvas;
     [SerializeField]
@@ -85,10 +79,7 @@ public class Player : MonoBehaviour
         CalculateMovement();
         if ((Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Fire1")) && Time.time > _canFire)
         {
-<<<<<<< HEAD
             _misfirePrefab.SetActive(false);
-=======
->>>>>>> 3bc4798f63ce2e0a425d738e8a19b498bfc72ce4
             FireLaser();
         }
 
@@ -134,7 +125,6 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
-<<<<<<< HEAD
         if (_ammo > 0) //only ammo firing whern ammo is available.
         {
             if (_isTripleShotActive == true)
@@ -152,26 +142,11 @@ public class Player : MonoBehaviour
                 _audioSource.PlayOneShot(_laserSound);
             }
             _ammo -= 1; //remove one round
+            _canvas.UpdateAmmo(_ammo);
         }
         else if (_ammo == 0)
         {
             _misfirePrefab.SetActive(true);
-=======
-
-        if (_isTripleShotActive == true)
-        {
-            _canFire = Time.time + (_fireRate * 2);
-            Vector3 offset = new Vector3(transform.position.x, (transform.position.y + 1.1f), 0);
-            Instantiate(_tripleShotPrefab, offset, Quaternion.identity);
-            _audioSource.PlayOneShot(_laserSound);
-        }
-        else if (_isTripleShotActive == false)
-        {
-            _canFire = Time.time + _fireRate;
-            Vector3 offset = new Vector3(transform.position.x, (transform.position.y + 1.1f), 0);
-            Instantiate(_laserPrefab, offset, Quaternion.identity);
-            _audioSource.PlayOneShot(_laserSound);
->>>>>>> 3bc4798f63ce2e0a425d738e8a19b498bfc72ce4
         }
     }
 
@@ -223,7 +198,6 @@ public class Player : MonoBehaviour
         }
     }
 
-<<<<<<< HEAD
     public void Repair()
     {
         if (_lives < 3)
@@ -242,6 +216,9 @@ public class Player : MonoBehaviour
         else if (_lives == 3)
         {
             _ammo += 10;
+            if (_ammo > 50)
+            { _ammo = 50; }
+            _canvas.UpdateAmmo(_ammo);
         }
     }
 
@@ -251,14 +228,9 @@ public class Player : MonoBehaviour
         _ammo += 25; //add ammo when triple shot is picked up.
         if (_ammo > 50)
         { _ammo = 50; } //limit ammo to 50 count.
+        _canvas.UpdateAmmo(_ammo);
         StartCoroutine(TripleShotPowerDownRoutine());
        
-=======
-    public void ActivateTripleShot()
-    {
-        _isTripleShotActive = true;
-        StartCoroutine(TripleShotPowerDownRoutine());
->>>>>>> 3bc4798f63ce2e0a425d738e8a19b498bfc72ce4
     }
 
     public void ActivateSpeedBoost()
@@ -275,14 +247,12 @@ public class Player : MonoBehaviour
         _playerShield.SetActive(true);
     }
 
-<<<<<<< HEAD
     public void RechargeAmmo()
     {
         _ammo = 50;
+        _canvas.UpdateAmmo(_ammo);
     }
 
-=======
->>>>>>> 3bc4798f63ce2e0a425d738e8a19b498bfc72ce4
     IEnumerator TripleShotPowerDownRoutine()
     {
         while (true)

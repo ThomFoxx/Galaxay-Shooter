@@ -13,6 +13,9 @@ public class UIManager : MonoBehaviour
     private Text _bestScoreText;
     private int _bestScore;
     [SerializeField]
+    private Text _ammoCountText;
+    private int _ammoCount = 0;
+    [SerializeField]
     private Sprite[] _livesSprites;
     [SerializeField]
     private Image _livesIMG;
@@ -57,6 +60,12 @@ public class UIManager : MonoBehaviour
     {
         _score += points;
         _scoreText.text = "Score: " + _score;
+    }
+
+    public void UpdateAmmo(int ammo)
+    {
+        _ammoCount = ammo;
+        _ammoCountText.text = "Ammo: " + _ammoCount;
     }
 
     public void CheckBestScore()
