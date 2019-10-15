@@ -46,8 +46,11 @@ public class Player : MonoBehaviour
     private GameObject _shipExplosion;
     private SpriteRenderer _spriteRenderer;
     [SerializeField]
-    private float _thursterPower = 2.5f;
+    private float _thrusterPower = 2.5f;
     private float _boost = 1;
+    [SerializeField]
+    private float _thrusterReserve = 100f;
+    private bool _canBoost = true;
     [SerializeField]
     private CameraShake _camera;
 
@@ -73,6 +76,7 @@ public class Player : MonoBehaviour
             Debug.Log("The UI Manager is NULL.");
         }
         _playerShield.SetActive(false);
+        _canvas.UpdateThruster(_thrusterReserve);
     }
 
     // Update is called once per frame
@@ -89,9 +93,24 @@ public class Player : MonoBehaviour
 
     void CalculateMovement()
     {
-        if (Input.GetKey(KeyCode.LeftShift)) //On LFT Shift hold, increase Boost to match Thruster Power.
+        if (Input.GetKey(KeyCode.LeftShift) && _thrusterReserve >= 0f && _canBoost) //On LFT Shift hold, increase Boost to match Thruster Power.
         {
-            _boost = _thursterPower;
+            _boost = _thrusterPower;
+            _thrusterReserve = _thrusterReserve - (5f * Time.deltaTime);
+            _canvas.UpdateThruster(_thrusterReserve);
+            if ( _thrusterReserve <1f)
+            {
+                _canBoost = false;
+            }
+        }
+        else if (_thrusterReserve < 100f && !Input.GetKey(KeyCode.LeftShift))
+        {
+            _thrusterReserve = _thrusterReserve + (1f * Time.deltaTime);
+            _canvas.UpdateThruster(_thrusterReserve);
+            if (_thrusterReserve > 50f)
+            {
+                _canBoost = true;
+            }
         }
         else { _boost = 1; } //on release, return Boost to 1.
         float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");

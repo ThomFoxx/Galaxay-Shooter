@@ -20,6 +20,12 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Image _livesIMG;
     [SerializeField]
+    private Sprite[] _thrusterSprites;
+    [SerializeField]
+    private Image _thrusterIMG;
+    [SerializeField]
+    private Animator _thrusterAnim;
+    [SerializeField]
     private Text _gameOver;
     private bool _isGameOver = false;
     [SerializeField]
@@ -80,10 +86,34 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int currentLives)
     {
-        Debug.Log("current Lives = " + currentLives);
         if (currentLives >= 0)
         {
             _livesIMG.sprite = _livesSprites[currentLives];
+        }
+    }
+
+    public void UpdateThruster(float thrusterBoost)
+    {
+        if (thrusterBoost >= 100f)
+        {
+            _thrusterIMG.sprite = _thrusterSprites[3];
+        }
+        else if (thrusterBoost < 100f && thrusterBoost >= 75f)
+        {
+            _thrusterIMG.sprite = _thrusterSprites[2];
+        }
+        else if (thrusterBoost < 75f && thrusterBoost >= 50f)
+        {
+            _thrusterIMG.sprite = _thrusterSprites[1];
+        }
+        else if (thrusterBoost < 50f && thrusterBoost >= 25f)
+        {
+            _thrusterIMG.sprite = _thrusterSprites[0];
+            _thrusterAnim.SetBool("isFlashing", false);
+        }
+        else if (thrusterBoost < 25f)
+        {
+            _thrusterAnim.SetBool("isFlashing", true);
         }
     }
 
