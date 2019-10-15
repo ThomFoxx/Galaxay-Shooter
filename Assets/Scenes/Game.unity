@@ -1025,7 +1025,10 @@ MonoBehaviour:
   _isTripleShotActive: 0
   _isSpeedBoostActive: 0
   _isShieldActive: 0
+  _isFanBurstActive: 0
   _tripleShotPrefab: {fileID: 8830981253902980458, guid: 63ac6239caa536d46ae256e6089ae79d,
+    type: 3}
+  _fanBurstPrefab: {fileID: 883991194315123173, guid: e61230e4fde226a44aee6852f3beab25,
     type: 3}
   _playerShield: {fileID: 2085496322}
   _shieldTransform: {fileID: 2085496323}
@@ -1098,7 +1101,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493848931}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.21, y: -2.8, z: 0}
+  m_LocalPosition: {x: -0.06, y: -1.76, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 2085496323}
@@ -3223,6 +3226,7 @@ MonoBehaviour:
   - {fileID: 1797854797673919963, guid: 1951c13ff5d267b4192ab9eb1ccc7be8, type: 3}
   - {fileID: 7319539565545581683, guid: 3b7fec5dbbfc3bb4f9b0ff21222e29f7, type: 3}
   - {fileID: 8869630107156551669, guid: 3db7362e5234e744daa9c3628b11b4b5, type: 3}
+  - {fileID: 1554461253647083272, guid: c0e7d97277131af46ad28878d8b4c9bb, type: 3}
 --- !u!4 &2113506672
 Transform:
   m_ObjectHideFlags: 0
@@ -3250,6 +3254,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Asteroid
+      objectReference: {fileID: 0}
+    - target: {fileID: 330527638161824218, guid: 12a4fcf2d9fef494b8a3e44a91359d07,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1607852312316388403, guid: 12a4fcf2d9fef494b8a3e44a91359d07,
         type: 3}

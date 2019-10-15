@@ -22,9 +22,11 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private UIManager _canvas;
     [SerializeField]
-    private bool _isTripleShotActive = false, _isSpeedBoostActive = false, _isShieldActive = false;
+    private bool _isTripleShotActive = false, _isSpeedBoostActive = false, _isShieldActive = false, _isFanBurstActive = false;
     [SerializeField]
     private GameObject _tripleShotPrefab;
+    [SerializeField]
+    private GameObject _fanBurstPrefab;
     [SerializeField]
     private GameObject _playerShield;
     [SerializeField]
@@ -155,7 +157,14 @@ public class Player : MonoBehaviour
                 Instantiate(_tripleShotPrefab, offset, Quaternion.identity);
                 _audioSource.PlayOneShot(_laserSound);
             }
-            else if (_isTripleShotActive == false)
+            else if (_isFanBurstActive == true)
+            {
+                _canFire = Time.time + (_fireRate * 2);
+                Vector3 offset = new Vector3(transform.position.x, (transform.position.y + 1.1f), 0);
+                Instantiate(_fanBurstPrefab, offset, Quaternion.identity);
+                _audioSource.PlayOneShot(_laserSound);
+            }
+            else if (_isTripleShotActive == false && _isFanBurstActive == false)
             {
                 _canFire = Time.time + _fireRate;
                 Vector3 offset = new Vector3(transform.position.x, (transform.position.y + 1.1f), 0);
@@ -246,13 +255,25 @@ public class Player : MonoBehaviour
 
     public void ActivateTripleShot()
     {
+        StopCoroutine(TripleShotPowerDownRoutine());
         _isTripleShotActive = true;
         _ammo += 25; //add ammo when triple shot is picked up.
         if (_ammo > 50)
         { _ammo = 50; } //limit ammo to 50 count.
         _canvas.UpdateAmmo(_ammo);
         StartCoroutine(TripleShotPowerDownRoutine());
-       
+    }
+
+    public void ActivateFanBurst()
+    {
+        StopCoroutine(FanBurstPowerDownRoutine());
+        _isFanBurstActive = true;
+        _ammo += 25; //add ammo when triple shot is picked up.
+        if (_ammo > 50)
+        { _ammo = 50; } //limit ammo to 50 count.
+        _canvas.UpdateAmmo(_ammo);
+        StartCoroutine(FanBurstPowerDownRoutine());
+
     }
 
     public void ActivateSpeedBoost()
@@ -277,16 +298,25 @@ public class Player : MonoBehaviour
 
     IEnumerator TripleShotPowerDownRoutine()
     {
-        while (true)
+        while (_isTripleShotActive)
         {
             yield return new WaitForSeconds(5f);
             _isTripleShotActive = false;
         }
     }
 
+    IEnumerator FanBurstPowerDownRoutine()
+    {
+        while (_isFanBurstActive)
+        {
+            yield return new WaitForSeconds(5f);
+            _isFanBurstActive = false;
+        }
+    }
+
     IEnumerator SpeedBoostPowerDownRoutine()
     {
-        while(true)
+        while(_isSpeedBoostActive)
         {
             yield return new WaitForSeconds(5f);
             _isSpeedBoostActive = false;

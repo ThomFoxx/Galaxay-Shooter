@@ -48,6 +48,9 @@ public class PowerUp : MonoBehaviour
                     case 4:
                         player.Repair();
                         break;
+                    case 5:
+                        player.ActivateFanBurst();
+                        break;
                     default:
                         Debug.Log("Non standard PowerUp Value.");
                         break;
