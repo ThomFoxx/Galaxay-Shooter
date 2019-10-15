@@ -197,6 +197,27 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Repair()
+    {
+        if (_lives < 3)
+        {
+            Debug.Log("Repair Collected, Live > 3");
+            _lives += 1;
+            if (_engines[0].activeInHierarchy)
+            {
+                _engines[0].SetActive(false);
+            }
+            else
+            {
+                _engines[1].SetActive(false);
+            }
+        }
+        else if (_lives == 3)
+        {
+            _ammo += 10;
+        }
+    }
+
     public void ActivateTripleShot()
     {
         _isTripleShotActive = true;

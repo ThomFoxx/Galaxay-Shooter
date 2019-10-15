@@ -45,6 +45,9 @@ public class PowerUp : MonoBehaviour
                     case 3:
                         player.RechargeAmmo();
                         break;
+                    case 4:
+                        player.Repair();
+                        break;
                     default:
                         Debug.Log("Non standard PowerUp Value.");
                         break;

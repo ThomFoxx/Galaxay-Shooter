@@ -40,6 +40,5 @@ public class EnergyCell : MonoBehaviour
                 _isMovingRight = true;
             }
         }
-        Debug.Log(positionX);
     }
 }
