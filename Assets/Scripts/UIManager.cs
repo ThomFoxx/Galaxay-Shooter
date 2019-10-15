@@ -81,7 +81,10 @@ public class UIManager : MonoBehaviour
     public void UpdateLives(int currentLives)
     {
         Debug.Log("current Lives = " + currentLives);
-        _livesIMG.sprite = _livesSprites[currentLives];
+        if (currentLives >= 0)
+        {
+            _livesIMG.sprite = _livesSprites[currentLives];
+        }
     }
 
     public void GameOver()

@@ -48,6 +48,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _thursterPower = 2.5f;
     private float _boost = 1;
+    [SerializeField]
+    private CameraShake _camera;
 
 
     // Start is called before the first frame update
@@ -171,7 +173,7 @@ public class Player : MonoBehaviour
             }
             return;
         }
-
+        StartCoroutine(_camera.Shake(.25f, .1f));
         _lives --;
         _canvas.UpdateLives(_lives);
         int randomEngine = Random.Range(0, 2);
@@ -220,6 +222,7 @@ public class Player : MonoBehaviour
             { _ammo = 50; }
             _canvas.UpdateAmmo(_ammo);
         }
+        _canvas.UpdateLives(_lives);
     }
 
     public void ActivateTripleShot()
