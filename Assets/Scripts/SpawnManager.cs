@@ -12,23 +12,52 @@ public class SpawnManager : MonoBehaviour
     private GameObject _powerupContainer;
     [SerializeField]
     private GameObject[] _powerupPrefabs;
+    [SerializeField]
+    private GameObject _asteroid;
+    private GameObject _newEnemy;
+    private Player _player;
+    private UIManager _canvas;
     private bool _stopSpawning = false;
+    private int _wave = 1;
+    
 
     // Start is called before the first frame update
     void Start()
     {
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        if (_player == null)
+        {
+            Debug.Log("Player is NULL in SpawnManager.");
+        }
+        _canvas = GameObject.Find("Canvas").GetComponent<UIManager>();
+        if (_canvas == null)
+        {
+            Debug.Log("Canvas is NULL in SpawnManager.");
+        }
     }
 
     public void StartSpawning()
     {
+        _stopSpawning = false;
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerupRoutine());
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (_player.KillCount() >= (_wave * 5))
+        {
+            _stopSpawning = true;
+            StopCoroutine(SpawnEnemyRoutine());
+            StopCoroutine(SpawnPowerupRoutine());
+            _wave++;
+            StartCoroutine(SpawnAsteroid());
+            _canvas.UpdateWave(_wave);
+            _canvas.ShowWave(true);
+            _player.RestKillCount();
+        }
     }
 
     //spawn gameobjects every 5 seconds
@@ -38,8 +67,19 @@ public class SpawnManager : MonoBehaviour
         while (_stopSpawning == false)
         {
             float randomX = Random.Range(-10f, 10f);
-            GameObject newEnemy = Instantiate(_enemyPrefab, new Vector3(randomX, 9, 0), Quaternion.identity);
-            newEnemy.transform.parent = _enemyContainer.transform;
+            switch (_wave)
+            {
+                case 1:
+                    _newEnemy = Instantiate(_enemyPrefab, new Vector3(randomX, 9, 0), Quaternion.identity);
+                    break;
+                case 2:
+                    int randomRot = Random.Range(-45, 45);
+                    _newEnemy = Instantiate(_enemyPrefab, new Vector3(randomX, 9, 0), Quaternion.Euler(0, 0, randomRot));
+                    break;
+                default:
+                    break;
+            }
+            _newEnemy.transform.parent = _enemyContainer.transform;
             yield return new WaitForSeconds(5f);
         }
     }
@@ -58,8 +98,19 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    IEnumerator SpawnAsteroid()
+    {
+        yield return new WaitForSeconds(5f);
+        Instantiate(_asteroid, new Vector3(0, 7, 0), Quaternion.identity);
+    }
+
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
+    }
+
+    public bool SpawningStopped()
+    {
+        return _stopSpawning;
     }
 }

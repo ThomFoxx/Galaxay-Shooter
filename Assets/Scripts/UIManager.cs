@@ -16,6 +16,9 @@ public class UIManager : MonoBehaviour
     private Text _ammoCountText;
     private int _ammoCount = 0;
     [SerializeField]
+    private Text _waveText;
+    private int _waveCount = 1;
+    [SerializeField]
     private Sprite[] _livesSprites;
     [SerializeField]
     private Image _livesIMG;
@@ -38,6 +41,7 @@ public class UIManager : MonoBehaviour
         _scoreText.text = "Score: " + _score;
         _bestScore = PlayerPrefs.GetInt("BestScore", 0);
         _bestScoreText.text = "Hi-Score: " + _bestScore;
+        _waveText.text = "Wave " + _waveCount;
         _gameOver.gameObject.SetActive(false);
         _pauseMenuAnimator = GameObject.Find("Pause_Menu_Panel").GetComponent<Animator>();
         _pauseMenuAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
@@ -71,7 +75,18 @@ public class UIManager : MonoBehaviour
     public void UpdateAmmo(int ammo)
     {
         _ammoCount = ammo;
-        _ammoCountText.text = "Ammo: " + _ammoCount;
+        _ammoCountText.text = "Ammo: " + _ammoCount +"/50";
+    }
+
+    public void UpdateWave(int wave)
+    {
+        _waveCount = wave;
+        _waveText.text = "Wave " + _waveCount;
+    }
+
+    public void ShowWave(bool set)
+    {
+        _waveText.enabled = set;
     }
 
     public void CheckBestScore()

@@ -11,6 +11,7 @@ public class Asteriod : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private GameObject _explosion;
     private SpawnManager _spawnManager;
+    private UIManager _canvas;
     [SerializeField]
     private AudioClip _explosionSound;
 
@@ -22,6 +23,11 @@ public class Asteriod : MonoBehaviour
         {
             Debug.Log("spawnManager is NULL.");
         }
+        _canvas = GameObject.Find("Canvas").GetComponent<UIManager>();
+        if (_canvas == null)
+        {
+            Debug.Log("Canvas is NULL in Asteriod.");
+        }
         _spriteRenderer = transform.GetComponent<SpriteRenderer>();
         if (_spriteRenderer == null)
         {
@@ -32,7 +38,14 @@ public class Asteriod : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(0, 0, _rotateSpeed * Time.deltaTime);    
+        if (transform.position.y >= 3 )
+        {
+            transform.Translate(Vector3.down * Time.deltaTime);
+        }
+        else
+        {
+            transform.Rotate(0, 0, _rotateSpeed * Time.deltaTime);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -45,6 +58,7 @@ public class Asteriod : MonoBehaviour
             gameObject.GetComponent<CircleCollider2D>().enabled = false;
             audiosource.PlayOneShot(_explosionSound);
             StartCoroutine(AsteriodDestructionRoutine());
+            _canvas.ShowWave(false);
         }
         new WaitForSeconds(2f);
         _spawnManager.StartSpawning();

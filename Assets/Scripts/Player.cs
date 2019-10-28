@@ -55,6 +55,8 @@ public class Player : MonoBehaviour
     private bool _canBoost = true;
     [SerializeField]
     private CameraShake _camera;
+    [SerializeField]
+    private int _enemyKillCount = 0;
 
 
     // Start is called before the first frame update
@@ -79,6 +81,7 @@ public class Player : MonoBehaviour
         }
         _playerShield.SetActive(false);
         _canvas.UpdateThruster(_thrusterReserve);
+        _canvas.UpdateAmmo(_ammo);
     }
 
     // Update is called once per frame
@@ -203,7 +206,6 @@ public class Player : MonoBehaviour
         }
         StartCoroutine(_camera.Shake(.25f, .1f));
         _lives --;
-        _canvas.UpdateLives(_lives);
         int randomEngine = Random.Range(0, 2);
         if (_lives == 2  )
         {
@@ -226,6 +228,23 @@ public class Player : MonoBehaviour
             StartCoroutine(ShipDestructionRoutine());
             _canvas.GameOver();
         }
+        _canvas.UpdateLives(_lives);
+
+    }
+
+    public void EnemyKill()
+    {
+        _enemyKillCount++;
+    }
+
+    public void RestKillCount()
+    {
+        _enemyKillCount = 0;
+    }
+
+    public int KillCount()
+    {
+        return _enemyKillCount;
     }
 
     public void Repair()
