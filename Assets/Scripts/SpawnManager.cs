@@ -21,7 +21,36 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private int _wave;
     private int _randomRot;
-    
+    private int[] _normalLoot = 
+        {
+        70,     //Triple Shot
+        70,     //Speed PowerUp
+        50,     //Shield
+        100,    //Energy Cell (Ammo)
+        30,     //Repair Cell (Health)
+        70,     //Burst Shot
+        5       //EMP (Penalty)
+        };
+    private int[] _shieldLoot = 
+        {
+        70,     //Triple Shot
+        70,     //Speed PowerUp
+        10,     //Shield
+        100,    //Energy Cell (Ammo)
+        30,     //Repair Cell (Health)
+        70,     //Burst Shot
+        5       //EMP (Penalty)
+        };
+    private int[] _damageLoot = 
+        {
+        70,     //Triple Shot
+        70,     //Speed PowerUp
+        30,     //Shield
+        100,    //Energy Cell (Ammo)
+        50,     //Repair Cell (Health)
+        70,     //Burst Shot
+        5       //EMP (Penalty)
+        };
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +65,9 @@ public class SpawnManager : MonoBehaviour
         {
             Debug.Log("Canvas is NULL in SpawnManager.");
         }
+        _normalLoot[6] = _normalLoot[6] * _wave;
+        _shieldLoot[6] = _shieldLoot[6] * _wave;
+        _damageLoot[6] = _damageLoot[6] * _wave;
     }
 
     public void StartSpawning()
@@ -70,7 +102,6 @@ public class SpawnManager : MonoBehaviour
         {
             float randomX = Random.Range(-10f, 10f);
             int randomEnemy = Random.Range(0, _wave);
-            Debug.Log(randomEnemy);
             switch (_wave)
             {
                 case 1:
@@ -107,8 +138,8 @@ public class SpawnManager : MonoBehaviour
         {
             float randomX = Random.Range(-10f, 10f);
             float randomTime = Random.Range(3f, 7f);
-            int randomPowerUp = Random.Range(0, 7);
-            GameObject newPowerup = Instantiate(_powerupPrefabs[randomPowerUp], new Vector3(randomX, 9, 0), Quaternion.identity);
+            //int randomPowerUp = Random.Range(0, 7);
+            GameObject newPowerup = Instantiate(_powerupPrefabs[RandomPowerUP()], new Vector3(randomX, 9, 0), Quaternion.identity);
             newPowerup.transform.parent = _powerupContainer.transform;
             yield return new WaitForSeconds(randomTime);
         }
@@ -123,6 +154,34 @@ public class SpawnManager : MonoBehaviour
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
+    }
+
+    private int RandomPowerUP()
+    {
+        int[] table;
+        int total = 0;
+        int randomNum = 0;
+        if(_player.ShipDamaged())
+        {   table = _damageLoot; }
+        else if (_player.ShieldActive())
+        {   table = _shieldLoot; }
+        else
+        {   table = _normalLoot;}
+        foreach(var item in table)
+        { total += item; }
+        randomNum = Random.Range(0, total);
+        for (int i = 0; i < table.Length; i++)
+        {
+            if (randomNum <= table[i])
+            {
+                return i;
+            }
+            else
+            {
+                randomNum -= table[i];
+            }
+        }
+        return 0;
     }
 
     public bool SpawningStopped()

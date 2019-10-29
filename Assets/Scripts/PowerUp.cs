@@ -61,5 +61,9 @@ public class PowerUp : MonoBehaviour
             }
             Destroy(this.gameObject);
         }
+        else if (other.tag == "Enemy")
+        {
+            Destroy(this.gameObject);
+        }
     }
 }

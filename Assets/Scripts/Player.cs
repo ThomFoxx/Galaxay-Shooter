@@ -256,7 +256,6 @@ public class Player : MonoBehaviour
     {
         if (_lives < 3)
         {
-            Debug.Log("Repair Collected, Live > 3");
             _lives += 1;
             if (_engines[0].activeInHierarchy)
             {
@@ -330,6 +329,18 @@ public class Player : MonoBehaviour
     {
         _ammo = 50;
         _canvas.UpdateAmmo(_ammo);
+    }
+
+    public bool ShieldActive()
+    {
+        return _isShieldActive;
+    }
+
+    public bool ShipDamaged()
+    {
+        if (_lives < 3)
+        { return true; }
+        else { return false; }
     }
 
     IEnumerator TripleShotPowerDownRoutine()
