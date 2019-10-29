@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _enemyPrefab;
+    private GameObject[] _enemyPrefab;
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
@@ -18,7 +18,9 @@ public class SpawnManager : MonoBehaviour
     private Player _player;
     private UIManager _canvas;
     private bool _stopSpawning = false;
-    private int _wave = 1;
+    [SerializeField]
+    private int _wave;
+    private int _randomRot;
     
 
     // Start is called before the first frame update
@@ -63,24 +65,38 @@ public class SpawnManager : MonoBehaviour
     //spawn gameobjects every 5 seconds
     IEnumerator SpawnEnemyRoutine()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(3f);        
         while (_stopSpawning == false)
         {
             float randomX = Random.Range(-10f, 10f);
+            int randomEnemy = Random.Range(0, _wave);
+            Debug.Log(randomEnemy);
             switch (_wave)
             {
                 case 1:
-                    _newEnemy = Instantiate(_enemyPrefab, new Vector3(randomX, 9, 0), Quaternion.identity);
+                    _newEnemy = Instantiate(_enemyPrefab[0], new Vector3(randomX, 9, 0), Quaternion.identity);
                     break;
                 case 2:
-                    int randomRot = Random.Range(-45, 45);
-                    _newEnemy = Instantiate(_enemyPrefab, new Vector3(randomX, 9, 0), Quaternion.Euler(0, 0, randomRot));
+                    _randomRot = Random.Range(-45, 45);
+                    if (randomEnemy != 0)
+                    {
+                        _randomRot = _randomRot - 180;
+                    }
+                    _newEnemy = Instantiate(_enemyPrefab[randomEnemy], new Vector3(randomX, 9, 0), Quaternion.Euler(0, 0, _randomRot));
+                    break;
+                case 3:
+                    _randomRot = Random.Range(-45, 45);
+                    if (randomEnemy != 0)
+                    {
+                        _randomRot = _randomRot - 180;
+                    }
+                    _newEnemy = Instantiate(_enemyPrefab[randomEnemy], new Vector3(randomX, 9, 0), Quaternion.Euler(0, 0, _randomRot));
                     break;
                 default:
                     break;
             }
             _newEnemy.transform.parent = _enemyContainer.transform;
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(Random.Range(5f,10f)/_wave);
         }
     }
 
@@ -91,7 +107,7 @@ public class SpawnManager : MonoBehaviour
         {
             float randomX = Random.Range(-10f, 10f);
             float randomTime = Random.Range(3f, 7f);
-            int randomPowerUp = Random.Range(0, 6);
+            int randomPowerUp = Random.Range(0, 7);
             GameObject newPowerup = Instantiate(_powerupPrefabs[randomPowerUp], new Vector3(randomX, 9, 0), Quaternion.identity);
             newPowerup.transform.parent = _powerupContainer.transform;
             yield return new WaitForSeconds(randomTime);
@@ -112,5 +128,10 @@ public class SpawnManager : MonoBehaviour
     public bool SpawningStopped()
     {
         return _stopSpawning;
+    }
+
+    public int Wave()
+    {
+        return _wave;
     }
 }

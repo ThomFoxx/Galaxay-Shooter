@@ -51,6 +51,9 @@ public class PowerUp : MonoBehaviour
                     case 5:
                         player.ActivateFanBurst();
                         break;
+                    case 6:
+                        player.ActivateEMP();
+                        break;
                     default:
                         Debug.Log("Non standard PowerUp Value.");
                         break;

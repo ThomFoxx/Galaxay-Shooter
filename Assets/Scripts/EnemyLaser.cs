@@ -28,7 +28,10 @@ public class EnemyLaser : MonoBehaviour
                 player.Damage();
                 if (transform.parent != null)
                 {
-                    Destroy(transform.parent);
+                    if (transform.parent.childCount <= 2)
+                    {
+                        Destroy(transform.parent.gameObject);
+                    }
                 }
             }
             Destroy(this.gameObject);

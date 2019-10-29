@@ -57,6 +57,9 @@ public class Player : MonoBehaviour
     private CameraShake _camera;
     [SerializeField]
     private int _enemyKillCount = 0;
+    [SerializeField]
+    private GameObject _EMP;
+    private bool _isEMPActive = false;
 
 
     // Start is called before the first frame update
@@ -87,13 +90,15 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CalculateMovement();
-        if ((Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Fire1")) && Time.time > _canFire)
+        if (!_isEMPActive)
         {
-            _misfirePrefab.SetActive(false);
-            FireLaser();
+            CalculateMovement();
+            if ((Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Fire1")) && Time.time > _canFire)
+            {
+                _misfirePrefab.SetActive(false);
+                FireLaser();
+            }
         }
-
     }
 
     void CalculateMovement()
@@ -185,7 +190,7 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        if (_isShieldActive == true)
+        if (_isShieldActive == true && !_isEMPActive)
         {
             float ShieldScaleX = _shieldTransform.localScale.x;
             float ShieldScaleY = _shieldTransform.localScale.y;
@@ -309,6 +314,18 @@ public class Player : MonoBehaviour
         _playerShield.SetActive(true);
     }
 
+    public void ActivateEMP()
+    {
+        _EMP.SetActive(true);
+        _isEMPActive = true;
+        if(_isShieldActive)
+        {
+            _playerShield.SetActive(false);
+        }
+        _thrusters.SetActive(false);
+        StartCoroutine(EMPCoolDownRoutine());
+    }
+
     public void RechargeAmmo()
     {
         _ammo = 50;
@@ -350,6 +367,21 @@ public class Player : MonoBehaviour
             _spriteRenderer.enabled = false;
             Destroy(_explosion.gameObject, 3.0f);
             Destroy(this.gameObject, 3f);
+        }
+    }
+
+    IEnumerator EMPCoolDownRoutine()
+    {
+        while(_isEMPActive)
+        {
+            yield return new WaitForSeconds(3f);
+            if (_shieldStrength >0)
+            {
+                _playerShield.SetActive(true);
+            }
+            _thrusters.SetActive(true);
+            _EMP.SetActive(false);
+            _isEMPActive = false;
         }
     }
 
