@@ -8,7 +8,9 @@ public class Stage4Enemy : MonoBehaviour
     private float _enemySpeed = 4f;
     private UIManager _canvas;
     private SpawnManager _spawnManager;
+    [SerializeField]
     private Animator _animator;
+    private SpriteRenderer _render;
     private AudioSource _audioSource;
     private Player _player;
     private Collider2D _collider;
@@ -22,6 +24,7 @@ public class Stage4Enemy : MonoBehaviour
 
     private void Start()
     {
+        _render = transform.GetComponent<SpriteRenderer>();
         _audioSource = transform.GetComponent<AudioSource>();
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
@@ -51,6 +54,7 @@ public class Stage4Enemy : MonoBehaviour
             _shield.SetActive(true);
         }
         _target = _player.transform;
+
     }
 
     // Update is called once per frame
@@ -63,7 +67,9 @@ public class Stage4Enemy : MonoBehaviour
 
     private void CalculateMovement()
     {
-        transform.Translate(Vector3.up * _enemySpeed * Time.deltaTime);
+        Vector3 dir = _target.position - transform.position;
+        transform.LookAt(_target, Vector3.right);
+        transform.Translate(dir *_enemySpeed *Time.deltaTime);
         if (transform.position.y <= -6 && !_spawnManager.SpawningStopped())
         {
             float randomX = Random.Range(-10.0f, 10.0f);
@@ -88,7 +94,9 @@ public class Stage4Enemy : MonoBehaviour
             if (!_isShieldActive)
             {
                 _isDead = true;
+                _animator.enabled = true;
                 _animator.SetTrigger("OnEnemyDeath");
+                _render.enabled = false;
                 _enemySpeed = 0.5f;
                 _collider.enabled = false;
                 _audioSource.PlayOneShot(_explosionSound);
@@ -109,7 +117,9 @@ public class Stage4Enemy : MonoBehaviour
                 _player.EnemyKill();
                 _isDead = true;
                 Destroy(other.gameObject);
+                _animator.enabled = true;
                 _animator.SetTrigger("OnEnemyDeath");
+                _render.enabled = false;
                 _enemySpeed = 0.5f;
                 _collider.enabled = false;
                 _audioSource.PlayOneShot(_explosionSound);
